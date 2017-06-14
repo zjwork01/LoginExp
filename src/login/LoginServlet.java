@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class LoginServlet
+ * 
  */
 @WebServlet(description = "处理登录信息", urlPatterns = { "/LoginServlet" })
 public class LoginServlet extends HttpServlet {
@@ -29,6 +29,20 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		/**
+		 * 校验验证码
+		 * 获取验证码
+		 * 获取填写的验证码
+		 * 进行比较（如果出错，保存错误信息到request，转发到login.jsp）
+		 */
+		String sessioncode = (String) request.getSession().getAttribute("vcode");
+		String code = (String)request.getParameter("verifyCode");
+		if(!sessioncode.toLowerCase().equals(code.toLowerCase())){
+			request.setAttribute("error", "验证码错误");
+			request.getRequestDispatcher("/login.jsp").forward(request, response);
+			return;
+		}
+		
 		/**
 		 * 1.获取表单数据
 		 */
@@ -61,6 +75,7 @@ public class LoginServlet extends HttpServlet {
 			 */
 			request.setAttribute("error", "用户名或密码错误！");
 			request.getRequestDispatcher("/login.jsp").forward(request, response);
+			return;
 		}
 	}
 
